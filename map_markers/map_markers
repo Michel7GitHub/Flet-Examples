@@ -1,0 +1,232 @@
+import flet as ft
+import flet.map as map
+from utils.mymap import MyMap
+
+global selected_place_type
+
+def main(page: ft.Page):
+
+    page.padding=0
+    page.spacing=0
+    
+    url_template="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+    initial_center = (28.05382, -15.69195)
+    initial_zoom = 10
+
+
+    def handle_tap(e):
+        print("Dans handle_tap")
+        if mp.marker_pointer != None:
+            mp.remove_marker(mp.marker_pointer)
+            mp.marker_pointer = None
+
+        if mp.selected_marker != None:
+            mp.unselect_marker(mp.selected_marker)
+            mp.selected_marker = None
+
+        place_type = place_types_dropdown.value
+        lat = e.coordinates.latitude
+        lon = e.coordinates.longitude
+        (icon_name, bgcolor) = place_types[place_type]
+
+        if place_type == 'pointer':
+            marker = mp.add_marker_pointer(lat, lon)
+            mp.marker_pointer = marker
+        else:
+            print("create Marker")
+            marker = mp.add_marker(lat, lon, icon_name=icon_name, bgcolor=bgcolor)
+               
+        mp.marker_layer.update()
+
+
+#    mp = MyMap(url_template, initial_center, initial_zoom)
+    mp = MyMap(url_template, initial_center, initial_zoom, handle_tap)
+
+    # Demos marker
+    mp.add_marker(28.08382, -15.71195, icon_name='hiking', bgcolor='green')
+    mp.add_marker(28.04382, -15.66195, icon_name='local_airport', bgcolor='blue')
+    mp.add_marker_spot(28.02382, -15.69195)
+    mp.add_marker_pointer(28.02382, -15.62195)
+    
+    mp.add_polyline("[[28.05382, -15.69195, 1266.85], [28.05371, -15.6919, 1267.19], [28.05339, -15.69228, 1277.14], [28.05316, -15.69264, 1277.6], [28.05269, -15.69301, 1279.05], [28.05259, -15.69313, 1278.51], [28.05238, -15.69387, 1275.91], [28.05222, -15.69473, 1276.06], [28.05217, -15.69525, 1275.14], [28.05204, -15.69557, 1271.0], [28.05166, -15.6958, 1267.75], [28.0515, -15.69598, 1264.22], [28.05169, -15.69609, 1260.21], [28.05158, -15.6963, 1257.01], [28.05151, -15.69649, 1253.02], [28.05129, -15.69683, 1245.03], [28.05133, -15.69736, 1229.38], [28.05117, -15.69783, 1219.34], [28.05142, -15.69869, 1195.04], [28.05136, -15.69884, 1193.5], [28.05126, -15.6989, 1192.23], [28.05142, -15.6991, 1186.13], [28.05183, -15.69927, 1178.96], [28.05198, -15.69972, 1166.15], [28.05215, -15.70048, 1149.93], [28.05219, -15.70081, 1139.74], [28.05239, -15.70125, 1122.78], [28.05246, -15.70149, 1117.34], [28.05278, -15.70192, 1114.95], [28.05296, -15.70217, 1108.12], [28.05323, -15.70251, 1099.21], [28.05326, -15.70265, 1096.96], [28.05333, -15.70281, 1094.54], [28.05336, -15.70308, 1090.32], [28.05346, -15.70329, 1086.18], [28.05377, -15.70357, 1075.57], [28.05363, -15.70388, 1069.79], [28.05396, -15.70415, 1059.95], [28.05399, -15.70433, 1056.54], [28.05407, -15.70452, 1054.01], [28.05417, -15.7046, 1053.81], [28.05439, -15.70509, 1044.49], [28.05461, -15.70535, 1036.79], [28.05492, -15.70578, 1029.03], [28.05525, -15.706, 1021.94], [28.05555, -15.70642, 1021.75], [28.05589, -15.7068, 1014.23], [28.05611, -15.70702, 1005.56], [28.05621, -15.70726, 997.08], [28.05618, -15.70777, 991.33], [28.05616, -15.70808, 989.81], [28.05627, -15.70834, 992.35], [28.05663, -15.70857, 998.24], [28.05676, -15.70885, 1000.87], [28.05693, -15.70909, 1003.17], [28.0572, -15.70923, 1007.08], [28.05775, -15.70945, 1015.14], [28.05796, -15.70976, 1020.06], [28.05824, -15.71005, 1018.66], [28.05821, -15.71018, 1018.58], [28.05799, -15.71045, 1021.26], [28.05802, -15.71067, 1015.28], [28.05798, -15.7108, 1010.43], [28.05808, -15.71093, 1004.24], [28.05822, -15.71102, 992.98], [28.05835, -15.71115, 980.81], [28.05839, -15.71134, 972.99], [28.05853, -15.71164, 964.9], [28.05862, -15.71186, 962.39], [28.05892, -15.71208, 960.19], [28.05916, -15.71237, 971.57], [28.05926, -15.71251, 967.88], [28.05943, -15.71257, 952.82], [28.05958, -15.71274, 941.61], [28.05979, -15.71293, 936.45], [28.06004, -15.7132, 934.39], [28.06016, -15.71334, 927.1], [28.06033, -15.71352, 915.66], [28.06028, -15.71376, 925.49], [28.0604, -15.71403, 923.24], [28.0605, -15.71408, 919.71], [28.06056, -15.71417, 920.84], [28.06064, -15.71422, 918.16], [28.06062, -15.71432, 920.38], [28.0607, -15.7145, 920.86], [28.06062, -15.71432, 920.38], [28.06064, -15.71422, 918.16], [28.06056, -15.71417, 920.84], [28.0605, -15.71408, 919.71], [28.0604, -15.71403, 923.24], [28.06028, -15.71376, 925.49], [28.06033, -15.71352, 915.66], [28.06016, -15.71334, 927.1], [28.06004, -15.7132, 934.39], [28.05979, -15.71293, 936.45], [28.05958, -15.71274, 941.61], [28.05943, -15.71257, 952.82], [28.05926, -15.71251, 967.88], [28.05916, -15.71237, 971.57], [28.05892, -15.71208, 960.19], [28.05862, -15.71186, 962.39], [28.05853, -15.71164, 964.9], [28.05839, -15.71134, 972.99], [28.05835, -15.71115, 980.81], [28.05822, -15.71102, 992.98], [28.05808, -15.71093, 1004.24], [28.05798, -15.7108, 1010.43], [28.05802, -15.71067, 1015.28], [28.05799, -15.71045, 1021.26], [28.05821, -15.71018, 1018.58], [28.05824, -15.71005, 1018.66], [28.05796, -15.70976, 1020.06], [28.05775, -15.70945, 1015.14], [28.0572, -15.70923, 1007.08], [28.05693, -15.70909, 1003.17], [28.05676, -15.70885, 1000.87], [28.05663, -15.70857, 998.24], [28.05627, -15.70834, 992.35], [28.05616, -15.70808, 989.81], [28.05618, -15.70777, 991.33], [28.05621, -15.70726, 997.08], [28.05611, -15.70702, 1005.56], [28.05589, -15.7068, 1014.23], [28.05555, -15.70642, 1021.75], [28.05525, -15.706, 1021.94], [28.05492, -15.70578, 1029.03], [28.05461, -15.70535, 1036.79], [28.05439, -15.70509, 1044.49], [28.05417, -15.7046, 1053.81], [28.05407, -15.70452, 1054.01], [28.05399, -15.70433, 1056.54], [28.05396, -15.70415, 1059.95], [28.05363, -15.70388, 1069.79], [28.05377, -15.70357, 1075.57], [28.05346, -15.70329, 1086.18], [28.05336, -15.70308, 1090.32], [28.05333, -15.70281, 1094.54], [28.05326, -15.70265, 1096.96], [28.05323, -15.70251, 1099.21], [28.05296, -15.70217, 1108.12], [28.05278, -15.70192, 1114.95], [28.05246, -15.70149, 1117.34], [28.05239, -15.70125, 1122.78], [28.05219, -15.70081, 1139.74], [28.05215, -15.70048, 1149.93], [28.05198, -15.69972, 1166.15], [28.05183, -15.69927, 1178.96], [28.05142, -15.6991, 1186.13], [28.05126, -15.6989, 1192.23], [28.05136, -15.69884, 1193.5], [28.05142, -15.69869, 1195.04], [28.05117, -15.69783, 1219.34], [28.05133, -15.69736, 1229.38], [28.05129, -15.69683, 1245.03], [28.05151, -15.69649, 1253.02], [28.05158, -15.6963, 1257.01], [28.05169, -15.69609, 1260.21], [28.0515, -15.69598, 1264.22], [28.05166, -15.6958, 1267.75], [28.05204, -15.69557, 1271.0], [28.05217, -15.69525, 1275.14], [28.05222, -15.69473, 1276.06], [28.05238, -15.69387, 1275.91], [28.05259, -15.69313, 1278.51], [28.05269, -15.69301, 1279.05], [28.05316, -15.69264, 1277.6], [28.05339, -15.69228, 1277.14], [28.05371, -15.6919, 1267.19], [28.05382, -15.69195, 1266.85]]")
+
+    # List of possible place types
+    place_types = {
+        'pointer' : ['gps_fixed', 'black'],
+        'airport' : ['local_airport', 'cyan'],
+        'amuse'   : ['attractions', 'black'], 
+        'beach'   : ['beach_access_rounded', 'orange'],
+        'biking'  : ['pedal_bike_outlined', 'deeporange'],
+        'bus'     : ['directions_bus_outlined', 'brown'], 
+        'casino'  : ['casino_outlined', 'black'], 
+        'cave'    : ['landscape', 'teal'], 
+        'ferry'   : ['directions_ferry_rounded', 'indigo'],
+        'hiking'  : [ 'hiking', 'green'], 
+        'home'    : ['home_rounded', 'blue'], 
+        'info'    : ['info_sharp', 'red'],  
+        'mirador' : ['photo_camera_rounded', 'purple'],
+        'museum'  : ['museum_outlined', 'brown'],  
+        'park'    : ['forest_rounded', 'lightgreen'],
+        'parking' : ['local_parking_rounded', 'red'],
+        'route'   : ['route', 'red'],
+        'stadium' : ['stadium_outlined', 'brown'], 
+        'subway'  : ['subway_outlined', 'brown'], 
+        'train'   : ['directions_train_outlined', 'brown']
+    }
+
+    #   ADD marker using BUTTON  +++ Place Type Selection
+    # =================================================================
+    
+    def close_drawer_place_types(e):
+        drawer_place_types.visible = False
+        drawer_place_types.update()
+    
+    def toggle_drawer_place_types(e):
+        drawer_place_types.visible = True
+        drawer_place_types.update()
+        remove_message.visible = False
+        remove_message.update()
+
+    dropdown_options = []
+
+    for place_type, values in place_types.items():
+        (icon, color) = values
+
+        dropdown_options.append(
+            ft.dropdown.Option(
+                content=ft.Row(
+                    [
+                        ft.Icon( name=icon, color=color),
+                        ft.Text(place_type.capitalize())
+                    ], spacing=20
+                ),                     
+                key=place_type
+            )
+        )
+
+    def select_place_type(e):
+        global selected_place_type
+        selected_place_type = e.data
+        drawer_place_types.content.controls[0].content.controls[2].visible=True
+        drawer_place_types.update()
+
+    place_types_dropdown = ft.Dropdown(
+        value = 'pointer',
+        border_color = ft.Colors.BLACK26, 
+        width=200,
+        border_width=1, 
+        border_radius=10,
+        content_padding=ft.padding.only(10,10,10,10),
+        text_size=14,
+        focused_border_color='blue',
+        focused_border_width=2,
+        options=dropdown_options,
+        on_change=select_place_type
+    )
+
+    drawer_place_types = ft.Container(
+        ft.Stack(
+            [
+                ft.Container(
+                    ft.Column(
+                        [
+                            ft.Text("Select a place type", size=14, weight='bold' ),
+                            place_types_dropdown,
+                            ft.Text("Then, click on map", size=14, weight='bold', visible=False ),
+                        ],
+                        spacing=20
+                    ),
+                    padding=ft.padding.only(top=20)
+                ),
+
+                ft.Container(
+                    ft.Icon(ft.Icons.CLOSE, size=20),
+                    alignment=ft.alignment.top_right,
+                    on_click = close_drawer_place_types,
+                    width=30,height=30,
+                    top=0, right=0
+                )
+            ]
+        ),
+        visible=False,
+        border=ft.border.all(1, ft.Colors.BLACK12),
+        border_radius=ft.border_radius.all(10),
+        padding=ft.padding.only(15,10,15,20),
+        bgcolor=ft.Colors.WHITE,
+        width=220,
+        top=50, right=80
+    )
+
+    add_marker_button = ft.Container(
+        ft.IconButton(
+            icon=ft.Icons.ADD_LOCATION_OUTLINED,
+            icon_size=24, 
+            icon_color=ft.Colors.BLACK87, 
+            bgcolor=ft.Colors.WHITE,  
+            on_click = toggle_drawer_place_types,
+            height=40, width=40
+        ),
+        top=50, right=15
+    )
+
+
+    #   REMOVE marker using BUTTON
+    # =================================================================
+
+    def click_remove_marker_button(e):
+        print("In click_remove_marker_button")
+        drawer_place_types.visible = False
+        drawer_place_types.update()
+        if mp.selected_marker == None:
+            remove_message.visible = True
+            remove_message.update()
+            print(" ... Aucun REMOVE ... selected_marker == None ")
+        else:
+            mp.remove_marker(mp.selected_marker)
+            print(" ... REMOVE ... selected_marker == ... ")
+            mp.selected_marker = None
+        mp.marker_layer.update()
+
+    remove_message = ft.Container(
+        ft.Column(
+            [
+                ft.Text('Fisrt, click on an icon', size=14, weight='bold'),
+                ft.Text('Then, click on remove button', size=14)
+            ]
+        ),
+        visible=False,
+        border=ft.border.all(1, ft.Colors.BLACK12),
+        border_radius=ft.border_radius.all(10),
+        padding=ft.padding.only(15,10,15,10),
+        bgcolor=ft.Colors.WHITE,
+        width=260,
+        top=105, right=80
+    )
+        
+    remove_marker_button = ft.Container(
+        ft.IconButton(
+            icon=ft.Icons.LOCATION_OFF_OUTLINED,
+            icon_size=24, 
+            icon_color=ft.Colors.BLACK87, 
+            bgcolor=ft.Colors.WHITE,  
+            on_click = click_remove_marker_button,
+            height=40, width=40
+        ),
+        top=105, right=15
+    )
+
+    content = ft.Stack(
+        [ 
+            mp,
+            add_marker_button,
+            remove_marker_button,
+            drawer_place_types,
+            remove_message
+        ],
+        expand=True
+    )
+
+    page.add(content)
+
+
+ft.app(target=main)
