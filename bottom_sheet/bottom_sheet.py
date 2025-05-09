@@ -107,7 +107,7 @@ def main(page: ft.Page):
     my_map = MyMap(url_template, initial_center, initial_zoom, map_handle_tap)
     
     my_bs = MyBottomSheet(page, bs_appbar, bs_cont, bs_bgcolor='amber100')
-    print("my_BS", my_bs)
+    
     page.add(ft.Stack( [ my_map, my_bs ], expand=True))
 
 ft.app(target=main)
