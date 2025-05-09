@@ -1,6 +1,6 @@
 import flet as ft
 import flet.map as map
-from utils.mymap import MyMap
+from utils.my_map import MyMap
 
 global selected_place_type
 
